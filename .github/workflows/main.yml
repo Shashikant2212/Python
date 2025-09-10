@@ -1,0 +1,26 @@
+name: Windows RDP
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Download Avica
+        run: |
+          Invoke-WebRequest -Uri "https://avica.com/download/Avica_setup.exe" -OutFile "Avica_setup.exe"
+
+      - name: Install Avica
+        run: |
+          Start-Process "Avica_setup.exe" -ArgumentList "/quiet" -Wait
+
+      - name: Show Avica ID & Password
+        run: |
+          Write-Host "⚡ Checking Avica remote ID..."
+          Get-Content "C:\ProgramData\Avica\id.txt"
+          Write-Host "⚡ Checking Avica password..."
+          Get-Content "C:\ProgramData\Avica\password.txt"
+
+      - name: Keep RDP Alive for 24 Hours
+        run: |
+          Write-Host "✅ RDP session started, keeping alive for 24 hours..."
+          Start-Sleep -Seconds 86400
